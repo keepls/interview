@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div style="height: 2000px;">
+        test
+    </div>
+
+</body>
+
+</html>
+
+<script defer>
+
+    window.addEventListener('scroll', function () {
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        // console.log(scrollHeight)
+        if (clientHeight + scrollTop >= scrollHeight) {
+            // 检测到滚动至页面底部，进行后续操作
+            // ...
+            console.log(1)
+        }
+    }, false);
+
+    // setTimeout(() => {
+    //     // 插入十万条数据
+    //     const total = 100000;
+    //     // 一次插入的数据
+    //     const once = 20;
+    //     // 插入数据需要的次数
+    //     const loopCount = Math.ceil(total / once);
+    //     let countOfRender = 0;
+    //     const ul = document.querySelector('ul');
+    //     // 添加数据的方法
+    //     function add() {
+    //         const fragment = document.createDocumentFragment();
+    //         for (let i = 0; i < once; i++) {
+    //             const li = document.createElement('li');
+    //             li.innerText = Math.floor(Math.random() * total);
+    //             fragment.appendChild(li);
+    //         }
+    //         ul.appendChild(fragment);
+    //         countOfRender += 1;
+    //         loop();
+    //     }
+    //     function loop() {
+    //         if (countOfRender < loopCount) {
+    //             window.requestAnimationFrame(add);
+    //         }
+    //     }
+    //     loop();
+    // }, 0)
+
+    const fn = () => {
+        return [...new Set([...document.querySelectorAll('*')].map(el => el.tagName))];
+    }
+    // console.log(fn())
+
+    
+    // const debounce = (fn, time) => {
+    //     let timeout = null;
+    //     return function () {
+    //         clearTimeout(timeout)
+    //         timeout = setTimeout(() => {
+    //             fn.apply(this, arguments);
+    //         }, time);
+    //     }
+    // };
+    // let k=window.addEventListener('resize', function () {
+    //     console.log(2132)
+    // })
+
+    // debounce(k,1000)
+
+
+
+
+</script>

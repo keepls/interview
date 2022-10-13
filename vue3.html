@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .color_list {
+      display: flex;
+      display: -webkit-flex;
+    }
+
+    .color_list li {
+      width: 100px;
+      height: 100px;
+      list-style: none;
+      text-align: center;
+      line-height: 100px;
+    }
+
+
+    .box {
+      width: 600px;
+      height: 150px;
+      background-color: #cccccc;
+      line-height: 150px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <div id="app">{{ message }}</div> -->
+  <!-- <div class="out" style="width: 200px;height:50px;border: 1px solid red;" onclick="test()">
+      <div class="inner" id="test2">cascsa</div>
+    </div> -->
+  <ul class="color_list">
+    <li>red</li>
+    <li>orange</li>
+    <li>yellow</li>
+    <li>green</li>
+    <li>blue</li>
+    <li>purple</li>
+  </ul>
+  <div class="box"></div>
+
+
+</body>
+
+</html>
+<script defer>
+
+  var color_list = document.querySelector(".color_list");
+  var colors = color_list.getElementsByTagName("li");
+  var box = document.querySelector(".box");
+  for (var n = 0; n < colors.length; n++) {
+    colors[n].addEventListener("click", function () {
+      console.log(this.innerHTML)
+      box.innerHTML = "该颜色为 " + this.innerHTML;
+    })
+  }
+
+
+
+  function test() {
+    console.log(11)
+  }
+  // function test2(){
+  //   console.log(22)
+  // }
+  let test2 = document.getElementById("test2")
+
+  // test2.addEventListener("click", function () {
+  //   console.log(22)
+  // }, true)
+
+
+
+  var a = { count: 1, deep: { count: 2 } }
+  // // var b = Object.assign(a)
+  // // console.log(b)
+  // var b={...a}
+  // console.log(b)
+  // 递归实现深拷贝
+  var deepCopy = (obj) => {
+    var ret = {}
+    for (var key in obj) {
+      var value = obj[key]
+      ret[key] = typeof value === 'object' ? deepCopy(value) : value
+    }
+    return ret
+  }
+  var b = deepCopy(a)
+  a.deep.count = 10
+
+  console.log(b)
+
+
+// console.log(deepCopy(a)
+// var a = { count: 1, deep: { count: 2 } }
+// var b = Object.assign(a)
+
+// a.deep.count = 950
+// // b.deep.count // 5
+// console.log(b.deep.count)
+
+</script>
+
+
+<!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+    const { createApp } = Vue
+    
+    createApp({
+      data() {
+        return {
+          message: 'Hello Vueccc!'
+        }
+      }
+    }).mount('#app')
+  </script> -->
+
+<!-- <script type="module">
+    import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    
+    createApp({
+      data() {
+        return {
+          message: 'Hello Vue!'
+        }
+      }
+    }).mount('#app')
+  </script> -->

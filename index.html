@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+<div id="hello-example">
+
+</div>
+</body>
+
+</html>
+<!-- <script src="https://cdn.bootcdn.net/ajax/libs/js-cookie/3.0.1/js.cookie.js"></script> -->
+<!-- <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script> -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<script>
+// react
+class HelloMessage extends React.Component {
+  render() {
+    return (
+      <div>
+        Hello {this.props.name}
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <HelloMessage name="Taylor" />,
+  document.getElementById('hello-example')
+);
+
+
+  // Promise.then(console.log(1))
+  // let h=new Promise((resolve,reject)=>{
+  //   console.log(4)
+  //   resolve(3)
+  // })
+  // // 微任务
+  // h.then(res=>{
+  //   console.log(res)
+  // })
+  // // 宏任务
+  // setTimeout(() => {
+  //   console.log(2)
+  // }, 0);
+  // console.log(1)
+
+
+//   let urls=["./imgs/u137.jpg","./imgs/abou-bg.png","./imgs/abou-bg2.png"]
+//   function loadImg (url) {
+//   return new Promise((resolve, reject) => {
+//     const img = new Image()
+//     img.onload = function (v) {
+//       resolve(img)
+//     }
+//     img.onerror = reject
+//     img.src = url
+//     img.width=200
+    
+//   })
+  
+// }
+// let promise = Promise.resolve()
+// for (let i = 0; i < url.length; i++) {
+// 	promise = promise
+// 				.then(()=>loadImg(url[i]))
+// 				.then(res=>{
+//           document.getElementsByTagName('div')[0].append(res)
+//         })
+//         .catch(err=>{
+//           console.log(err)
+//         })
+// }
+// urls.reduce((promise, url) => {
+// 	return promise
+// 				.then(()=>loadImg(url))
+// 				.then(res=>{
+//           document.getElementsByTagName('div')[0].append(res)
+//         })
+//         .catch(err=>{
+//           console.log(err)
+//         })
+// }, Promise.resolve())
+
+// 递归
+// function syncLoad (index) {
+//   if (index >= urls.length) return 
+// 	loadImg(urls[index])
+// 	  .then(img => {
+// 		// process img
+      
+//         document.getElementsByTagName('div')[0].append(img)
+      
+//       syncLoad (index + 1)
+//     })
+//     .catch(err=>{
+//       console.log(err)
+//       // syncLoad (index + 1)
+//     })
+// }
+
+// 调用
+// syncLoad(0)
+
+
+
+// loadImg(url[0])
+// .then(res=>{
+//   // console.log(res)
+//   document.getElementsByTagName('div')[0].append(res)
+// })
+// .then(()=>{
+  
+//  return loadImg(url[1])
+// })
+// .then(res=>{
+//   // console.log(res)
+//    document.getElementsByTagName('div')[0].append(res)
+
+// })
+// .then(()=>{
+//   return loadImg(url[2])
+// })
+// .then(res=>{
+//   document.getElementsByTagName('div')[0].append(res)
+// })
+// .catch(err=>{
+//   console.log(err)
+// })
+</script>
+<script>
+  
+ let arr = [{ id: 1 }, {id: 1}, {id: 2}, {id: 3}];
+
+  // 合理使用reduce方法:
+
+  
+  let a=arr.reduce((newArr, cur) => {
+    // console.log(cur)
+
+    // const findOne = newArr.find(v => v.id === cur.id)
+
+    // const findOne=newArr.find(v=>v.id ===cur.id)
+    // console.log(findOne)
+    const findOne=newArr.find(v=>{
+      
+      return v.id===cur.id
+      // console.log(cur.id)
+    })
+    // console.log(findOne)
+
+    if (!findOne) {
+      newArr.push(cur)
+    }
+    // console.log(newArr)
+
+    return newArr
+
+  }, [])
+  // console.log(a)
+  // axios.get()
+  // Cookies.set('name', 'value');
+  // console.log(this)
+  // console.log(2)
+  // let a=()=>{
+  //   // console.log(this.a)
+  // }
+  // function b(arguments){
+
+  //   constructor({
+  //     name:"123"
+  //   })
+
+  //   // console.log(arguments)
+  // }
+  // // console.log(a.prototype)
+  // console.log(b.prototype)
+  // b(1,2,3)
+  // console.log(b.prototype)
+    // console.log(Cookies)
+</script>

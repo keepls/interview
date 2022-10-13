@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- https://segmentfault.com/a/1190000012646488 -->
+    
+</body>
+</html>
+<script>
+    var createPerson=function(name,age){
+    var obj=new Object()
+
+    obj.name=name
+    obj.age=age
+    obj.getName=function(){
+        return this.name
+    }
+    return obj
+}
+//  创建实例
+ var jc=createPerson('js',10)
+//  console.log(typeof jc)
+
+var Person=function(name,age){
+    this.name=name
+    this.age=age
+    this.getName=function(){
+        return this.name
+    }
+
+}
+var p=new Person('tets',20)
+// console.log(p.getName())
+// console.log(p instanceof Person)
+// new的过程
+function New(func){
+    var res={}
+    if (func.prototype !==null) {
+        res.___proto__=func.prototype
+    }
+    var ret=func.apply(res,Array.prototype.slice.call(arguments,1))
+    if ((typeof ret==="object" || typeof ret==='function') && ret !==null) {
+        return ret
+    }
+    return res
+}
+var w=New(Person,'tets123',20)
+// console.log(w.getName())
+// console.log(typeof w)
+
+// 原型
+function phone(price,size){
+    this.price=price
+    this.size=size
+    this.getPrice=function(){
+        // console.log("被优先访问")
+        return this.price
+    }
+    
+
+}
+function xiaomi(price){
+    phone.call(this,price)
+}
+var xm=new xiaomi(10)
+// console.log(xm.getPrice())
+// console.log(xm.prototype)
+
+// 挂载到原型对象上
+phone.prototype.getPrice=function(){
+    return this.price
+}
+var o=new phone('1000元',5)
+// console.log('getPrice' in o)
+// o.getPrice()
+// console.log(phone.prototype)
+// console.log(phone.prototype===o.prototype.__proto__)
+
+// console.log(o.getPrice())
+// console.log()
+// 优先访问自己的属性和方法e
+
+function dog(){
+
+}
+dog.prototype={
+    constructor:dog,
+    name:function(){},
+    age:function(){}
+
+}
+// 构造函数继承 
+
+// console.log(a)
+// let a=1
+
+
+
+
+</script>
