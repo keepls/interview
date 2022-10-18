@@ -12,6 +12,40 @@
 </body>
 </html>
 <script>
+    // let array=100
+    let sum=0
+   function w(){
+        // w()
+    for (let index = 0; index <= 10; index++) {
+        // const element = array[index];
+        sum=sum+index
+        // sum+=index
+      }
+    }
+
+    // w()
+    
+    
+    // w()
+    // console.log(3)
+
+    class mather{
+        constructor(name){
+            this.name=name
+        }
+        showName(){
+            return this.name
+        }
+    }
+    class son extends mather{
+        constructor(name1,age){
+            super(name1)
+            this.age=age
+        }
+    }
+    var s=new son('test',20)
+    // console.log(s.showName())
+
     var createPerson=function(name,age){
     var obj=new Object()
 
