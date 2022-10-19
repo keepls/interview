@@ -52,7 +52,50 @@ new构造函数与普通函数的不同，new的过程
 2.函数中的this
 3.使用call，apply显示制定this
 
+## js模块化
+
+
+
+
 ## 事件循环(event loop)
+既然js是单线程，那就像只有一个窗口的银行，客户需要排队一个一个办理业务，同理js任务也要一个一个顺序执行。如果一个任务耗时过长，那么后一个任务也必须等着。那么问题来了，假如我们想浏览新闻，但是新闻包含的超清图片加载很慢，难道我们的网页要一直卡着直到图片完全显示出来？因此聪明的程序员将任务分为两类：
+
+同步任务
+异步任务
+
+当我们打开网站时，网页的渲染过程就是一大堆同步任务，比如页面骨架和页面元素的渲染。而像加载图片音乐之类占用资源大耗时久的任务，就是异步任务。关于这部分有严格的文字定义，但本文的目的是用最小的学习成本彻底弄懂执行机制，所以我们用导图来说明：
+
+
+导图要表达的内容用文字来表述的话：
+
+同步和异步任务分别进入不同的执行"场所"，同步的进入主线程，异步的进入Event Table并注册函数。
+当指定的事情完成时，Event Table会将这个函数移入Event Queue。
+主线程内的任务执行完毕为空，会去Event Queue读取对应的函数，进入主线程执行。
+上述过程会不断重复，也就是常说的Event Loop(事件循环)。
+
+我们不禁要问了，那怎么知道主线程执行栈为空啊？js引擎存在monitoring process进程，会持续不断的检查主线程执行栈是否为空，一旦为空，就会去Event Queue那里检查是否有等待被调用的函数。
+说了这么多文字，不如直接一段代码更直白：
+let data = [];
+$.ajax({
+    url:www.javascript.com,
+    data:data,
+    success:() => {
+        console.log('发送成功!');
+    }
+})
+console.log('代码执行结束');
+复制代码
+上面是一段简易的ajax请求代码：
+
+ajax进入Event Table，注册回调函数success。
+执行console.log('代码执行结束')。
+ajax事件完成，回调函数success进入Event Queue。
+主线程从Event Queue读取回调函数success并执行。
+
+相信通过上面的文字和代码，你已经对js的执行顺序有了初步了解。接下来我们来研究进阶话题：setTimeout。
+
+
+
 
 ## 执行上下文
 
@@ -252,6 +295,133 @@ web服务器收到请求后发现有头If-None-Match则与被请求资源的相�
 
 
 ## 跨域
+一、什么是跨域？
+1.什么是同源策略及其限制内容？
+同源策略是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，浏览器很容易受到XSS、CSRF等攻击。所谓同源是指"协议+域名+端口"三者相同，即便两个不同的域名指向同一个ip地址，也非同源。
+
+同源策略限制内容有：
+
+Cookie、LocalStorage、IndexedDB 等存储性内容
+DOM 节点
+AJAX 请求发送后，结果被浏览器拦截了
+
+但是有三个标签是允许跨域加载资源：
+
+<img src=XXX>
+<link href=XXX>
+<script src=XXX>
+
+.常见跨域场景
+当协议、子域名、主域名、端口号中任意一个不相同时，都算作不同域。不同域之间相互请求资源，就算作“跨域”。常见跨域场景如下图所示：
+
+    特别说明两点：
+第一：如果是协议和端口造成的跨域问题“前台”是无能为力的。
+第二：在跨域问题上，仅仅是通过“URL的首部”来识别而不会根据域名对应的IP地址是否相同来判断。“URL的首部”可以理解为“协议, 域名和端口必须匹配”。
+这里你或许有个疑问：请求跨域了，那么请求到底发出去没有？
+跨域并不是请求发不出去，请求能发出去，服务端能收到请求并正常返回结果，只是结果被浏览器拦截了。你可能会疑问明明通过表单的方式可以发起跨域请求，为什么 Ajax 就不会?因为归根结底，跨域是为了阻止用户读取到另一个域名下的内容，Ajax 可以获取响应，浏览器认为这不安全，所以拦截了响应。但是表单并不会获取新的内容，所以可以发起跨域请求。同时也说明了跨域并不能完全阻止 CSRF，因为请求毕竟是发出去了。
+
+
+
+
+二、跨域解决方案
+
+1.jsonp
+1) JSONP原理
+利用 <script> 标签没有跨域限制的漏洞，网页可以得到从其他来源动态产生的 JSON 数据。JSONP请求一定需要对方的服务器做支持才可以。
+2) JSONP和AJAX对比
+JSONP和AJAX相同，都是客户端向服务器端发送请求，从服务器端获取数据的方式。但AJAX属于同源策略，JSONP属于非同源策略（跨域请求）
+3) JSONP优缺点
+JSONP优点是简单兼容性好，可用于解决主流浏览器的跨域数据访问的问题。缺点是仅支持get方法具有局限性,不安全可能会遭受XSS攻击。
+
+
+2.cors
+CORS 需要浏览器和后端同时支持。IE 8 和 9 需要通过 XDomainRequest 来实现。
+浏览器会自动进行 CORS 通信，实现 CORS 通信的关键是后端。只要后端实现了 CORS，就实现了跨域。
+服务端设置 Access-Control-Allow-Origin 就可以开启 CORS。 该属性表示哪些域名可以访问资源，如果设置通配符则表示所有网站都可以访问资源。
+虽然设置 CORS 和前端没什么关系，但是通过这种方式解决跨域问题的话，会在发送请求时出现两种情况，分别为简单请求和复杂请求。
+
+
+1) 简单请求
+只要同时满足以下两大条件，就属于简单请求
+条件1：使用下列方法之一：
+
+GET
+HEAD
+POST
+
+条件2：Content-Type 的值仅限于下列三者之一：
+
+text/plain
+multipart/form-data
+application/x-www-form-urlencoded
+
+请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器； XMLHttpRequestUpload 对象可以使用 XMLHttpRequest.upload 属性访问。
+
+2) 复杂请求
+不符合以上条件的请求就肯定是复杂请求了。
+复杂请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为"预检"请求,该请求是 option 方法的，通过该请求来知道服务端是否允许跨域请求。
+我们用PUT向后台请求时，属于复杂请求，后台需做如下配置：
+
+3.postMessage
+postMessage是HTML5 XMLHttpRequest Level 2中的API，且是为数不多可以跨域操作的window属性之一，它可用于解决以下方面的问题：
+
+页面和其打开的新窗口的数据传递
+多窗口之间消息传递
+页面与嵌套的iframe消息传递
+上面三个场景的跨域数据传递
+
+postMessage()方法允许来自不同源的脚本采用异步方式进行有限的通信，可以实现跨文本档、多窗口、跨域消息传递。
+
+otherWindow.postMessage(message, targetOrigin, [transfer]);
+
+
+message: 将要发送到其他 window的数据。
+targetOrigin:通过窗口的origin属性来指定哪些窗口能接收到消息事件，其值可以是字符串"*"（表示无限制）或者一个URI。在发送消息的时候，如果目标窗口的协议、主机地址或端口这三者的任意一项不匹配targetOrigin提供的值，那么消息就不会被发送；只有三者完全匹配，消息才会被发送。
+transfer(可选)：是一串和message 同时传递的 Transferable 对象. 这些对象的所有权将被转移给消息的接收方，而发送一方将不再保有所有权。
+
+接下来我们看个例子： http://localhost:3000/a.html页面向http://localhost:4000/b.html传递“我爱你”,然后后者传回"我不爱你"。
+
+4.websocket
+Websocket是HTML5的一个持久化的协议，它实现了浏览器与服务器的全双工通信，同时也是跨域的一种解决方案。WebSocket和HTTP都是应用层协议，都基于 TCP 协议。但是 WebSocket 是一种双向通信协议，在建立连接之后，WebSocket 的 server 与 client 都能主动向对方发送或接收数据。同时，WebSocket 在建立连接时需要借助 HTTP 协议，连接建立好了之后 client 与 server 之间的双向通信就与 HTTP 无关了。
+原生WebSocket API使用起来不太方便，我们使用Socket.io，它很好地封装了webSocket接口，提供了更简单、灵活的接口，也对不支持webSocket的浏览器提供了向下兼容。
+我们先来看个例子：本地文件socket.html向localhost:3000发生数据和接受数据
+
+6.nginx反向代理
+实现原理类似于Node中间件代理，需要你搭建一个中转nginx服务器，用于转发请求。
+使用nginx反向代理实现跨域，是最简单的跨域方式。只需要修改nginx的配置即可解决跨域问题，支持所有浏览器，支持session，不需要修改任何代码，并且不会影响服务器性能。
+实现思路：通过nginx配置一个代理服务器（域名与domain1相同，端口不同）做跳板机，反向代理访问domain2接口，并且可以顺便修改cookie中domain信息，方便当前域cookie写入，实现跨域登录。
+先下载nginx，然后将nginx目录下的nginx.conf修改如下:
+
+7.window.name + iframe
+window.name属性的独特之处：name值在不同的页面（甚至不同域名）加载后依旧存在，并且可以支持非常长的 name 值（2MB）。
+其中a.html和b.html是同域的，都是http://localhost:3000;而c.html是http://localhost:4000
+
+8.location.hash +  iframe
+实现原理： a.html欲与c.html跨域相互通信，通过中间页b.html来实现。 三个页面，不同域之间利用iframe的location.hash传值，相同域之间直接js访问来通信。
+具体实现步骤：一开始a.html给c.html传一个hash值，然后c.html收到hash值后，再把hash值传递给b.html，最后b.html将结果放到a.html的hash值中。
+同样的，a.html和b.html是同域的，都是http://localhost:3000;而c.html是http://localhost:4000
+
+9.document.domain + iframe
+该方式只能用于二级域名相同的情况下，比如 a.test.com 和 b.test.com 适用于该方式。
+只需要给页面添加 document.domain ='test.com' 表示二级域名都相同就可以实现跨域。
+实现原理：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。
+我们看个例子：页面a.zf1.cn:3000/a.html获取页面b.zf1.cn:3000/b.html中a的值
+
+三、总结
+
+CORS支持所有类型的HTTP请求，是跨域HTTP请求的根本解决方案
+JSONP只支持GET请求，JSONP的优势在于支持老式浏览器，以及可以向不支持CORS的网站请求数据。
+不管是Node中间件代理还是nginx反向代理，主要是通过同源策略对服务器不加限制。
+日常工作中，用得比较多的跨域方案是cors和nginx反向代理
+
+
+
+
+
+
+
+
+
 
 ## 输入url显示页面过程
 一.用户输入url
